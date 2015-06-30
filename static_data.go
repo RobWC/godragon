@@ -16,17 +16,55 @@ type ChampionData struct {
 }
 
 type Champion struct {
-	Version string        `json:"version"`
-	ID      string        `json:"id"`
-	Key     string        `json:"key"`
-	Name    string        `json:"name"`
-	Title   string        `json:"title"`
-	Blurb   string        `json:"blurb"`
-	Info    ChampionInfo  `json:"info"`
-	Image   ChampionImage `json:"image"`
-	Tags    []string      `json:"tags"`
-	ParType string        `json:"partype"`
-	Stats   ChampionStats `json:"stats"`
+	Version   string          `json:"version"`
+	ID        string          `json:"id"`
+	Key       string          `json:"key"`
+	Name      string          `json:"name"`
+	Title     string          `json:"title"`
+	Blurb     string          `json:"blurb"`
+	AllyTips  []string        `json:"allytips"`
+	EnemyTips []string        `json:"enemytips"`
+	Spells    []ChampionSpell `json:"Spells"`
+	Info      ChampionInfo    `json:"info"`
+	Image     Image           `json:"image"`
+	Skins     []ChampionSkin  `json:"skins"`
+	Lore      string          `json:"lore"`
+	Tags      []string        `json:"tags"`
+	ParType   string          `json:"partype"`
+	Stats     ChampionStats   `json:"stats"`
+}
+
+type ChampionSkin struct {
+	ID   string `json:"id"`
+	Num  int    `json:"num"`
+	Name string `json:"name"`
+}
+
+type ChampionSpell struct {
+	ID           string              `json:"id"`
+	Name         string              `json:"name"`
+	Description  string              `json:"description"`
+	ToolTip      string              `json:"tooltip"`
+	LevelTip     map[string][]string `json:"leveltip"`
+	MaxRank      int                 `json:"maxrank"`
+	Cooldown     []int               `json:"cooldown"`
+	CooldownBurn string              `json:"cooldownBurn"`
+	Cost         []int               `json:"cost"`
+	CostBurn     string              `json:"costBurn"`
+	Effect       []string            `json:"effect"` //TODO: What is this really?
+	EffectBurn   []string            `json:"effectburn"`
+	Vars         []SpellVar          `json:"vars"`
+	CostType     string              `json:"costType"`
+	Range        []int               `json:"range"`
+	RangeBurn    string              `json:"rangeBurn"`
+	Image        Image               `json:"image"`
+	Resource     string              `json:"resource"`
+}
+
+type SpellVar struct {
+	Link  string  `json:"link"`
+	Coeff float32 `json:"coeff"`
+	Key   string  `json:"key"`
 }
 
 type ChampionInfo struct {
@@ -36,7 +74,7 @@ type ChampionInfo struct {
 	Difficulty int `json:"difficulty"`
 }
 
-type ChampionImage struct {
+type Image struct {
 	Full   string `json:"full"`
 	Sprite string `json:"sprite"`
 	Group  string `json:"group"`
@@ -86,6 +124,22 @@ func StaticChampions(version string) {
 	log.Println("Total Champs:", len(cd.Champions))
 }
 
+func StaticChampion(version string, name string) Champion {
+	path := fmt.Sprintf("http://ddragon.leagueoflegends.com/cdn/%s/data/en_US/champion/%s.json", version, name)
+	resp, err := http.Get(path)
+	if err != nil {
+		log.Println(err)
+	}
+	defer resp.Body.Close()
+	body, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		log.Println(err)
+	}
+	cd := ChampionData{}
+	json.Unmarshal(body, &cd)
+	return cd.Champions[name]
+}
+
 type VersionList struct {
 	Versions []string
 }
@@ -125,5 +179,5 @@ func StaticLanguages() {
 	ll := &LanguageList{}
 	json.Unmarshal(body, &ll.Languages)
 	log.Printf("%#v", ll.Languages)
-	log.Println("Total Versions:", len(ll.Languages))
+	log.Println("Total Languages:", len(ll.Languages))
 }

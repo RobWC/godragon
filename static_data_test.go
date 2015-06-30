@@ -6,6 +6,10 @@ func TestStaticChampions(t *testing.T) {
 	StaticChampions("5.12.1")
 }
 
+func TestStaticChampion(t *testing.T) {
+	StaticChampion("5.12.1", "Annie")
+}
+
 func TestStaticVersions(t *testing.T) {
 	StaticVersions()
 }
