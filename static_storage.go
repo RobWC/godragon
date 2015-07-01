@@ -1,6 +1,10 @@
 package main
 
-import r "github.com/dancannon/gorethink"
+import (
+	"time"
+
+	r "github.com/dancannon/gorethink"
+)
 
 type StaticStorage struct {
 	Session *r.Session
@@ -9,14 +13,24 @@ type StaticStorage struct {
 func (s *StaticStorage) Connect() (err error) {
 	s.Session, err = r.Connect(
 		r.ConnectOpts{Address: "localhost:28015",
-			Database: "test",
-			MaxIdle:  10,
-			MaxOpen:  20})
+			Database:      "lol",
+			Timeout:       5 * time.Second,
+			MaxIdle:       100,
+			MaxOpen:       1000,
+			DiscoverHosts: true})
 	return err
 }
 
 func (s *StaticStorage) CreateSchema() error {
-	_, err := r.DB("test").TableCreate("champions").RunWrite(s.Session)
+	_, err := r.DB("lol").TableCreate("champions").RunWrite(s.Session)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (s *StaticStorage) DropSchema() error {
+	_, err := r.DB("lol").TableDrop("champions").RunWrite(s.Session)
 	if err != nil {
 		return err
 	}
@@ -24,7 +38,7 @@ func (s *StaticStorage) CreateSchema() error {
 }
 
 func (s *StaticStorage) AddChampion(champ Champion) (err error) {
-	_, err = r.Table("champions").Insert(champ).Run(s.Session)
+	_, err = r.Table("champions").Insert(champ).RunWrite(s.Session)
 	if err != nil {
 		return err
 	}

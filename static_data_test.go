@@ -17,3 +17,16 @@ func TestStaticVersions(t *testing.T) {
 func TestStaticLanguages(t *testing.T) {
 	StaticLanguages()
 }
+
+func TestChampionList(t *testing.T) {
+	err, champs := StaticChampions("5.12.1")
+	if err != nil {
+		t.Fatal(err)
+	}
+	for k := range champs {
+		err, _ := StaticChampion("5.12.1", k)
+		if err != nil {
+			t.Fatal(err)
+		}
+	}
+}

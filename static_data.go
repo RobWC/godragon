@@ -71,7 +71,7 @@ type ChampionInfo struct {
 	Attack     int `json:"attack"`
 	Defense    int `json:"defense"`
 	Magic      int `json:"magic"`
-	Difficulty int `json:"difficulty"`
+	Difficulty int `json:"difficulty" gorethink:"difficulty"`
 }
 
 type Image struct {
@@ -107,77 +107,75 @@ type ChampionStats struct {
 	AttackSpeedPerLevel  float32 `json:"attackspeedperlevel"`
 }
 
-func StaticChampions(version string) {
+func StaticChampions(version string) (err error, cr map[string]Champion) {
 	path := fmt.Sprintf("http://ddragon.leagueoflegends.com/cdn/%s/data/en_US/champion.json", version)
 	resp, err := http.Get(path)
 	if err != nil {
-		log.Println(err)
+		return err, cr
 	}
 	defer resp.Body.Close()
 	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
-		log.Println(err)
+		return err, cr
 	}
 	cd := ChampionData{}
 	json.Unmarshal(body, &cd)
 	log.Printf("%#v", cd)
 	log.Println("Total Champs:", len(cd.Champions))
+	return err, cd.Champions
 }
 
-func StaticChampion(version string, name string) Champion {
+func StaticChampion(version string, name string) (err error, c Champion) {
 	path := fmt.Sprintf("http://ddragon.leagueoflegends.com/cdn/%s/data/en_US/champion/%s.json", version, name)
 	resp, err := http.Get(path)
 	if err != nil {
-		log.Println(err)
+		return err, c
 	}
 	defer resp.Body.Close()
 	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
-		log.Println(err)
+		return err, c
 	}
 	cd := ChampionData{}
 	json.Unmarshal(body, &cd)
-	return cd.Champions[name]
+	return err, cd.Champions[name]
 }
 
 type VersionList struct {
 	Versions []string
 }
 
-func StaticVersions() {
+func StaticVersions() (err error, vl VersionList) {
 	path := "https://ddragon.leagueoflegends.com/api/versions.json"
 	resp, err := http.Get(path)
 	if err != nil {
-		log.Println(err)
+		return err, vl
 	}
 	defer resp.Body.Close()
 	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
-		log.Println(err)
+		return err, vl
 	}
-	vl := &VersionList{}
 	json.Unmarshal(body, &vl.Versions)
-	log.Printf("%#v", vl.Versions)
-	log.Println("Total Versions:", len(vl.Versions))
+
+	return err, vl
 }
 
 type LanguageList struct {
 	Languages []string
 }
 
-func StaticLanguages() {
+func StaticLanguages() (err error, ll LanguageList) {
 	path := "https://ddragon.leagueoflegends.com/cdn/languages.json"
 	resp, err := http.Get(path)
 	if err != nil {
-		log.Println(err)
+		return err, ll
 	}
 	defer resp.Body.Close()
 	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
-		log.Println(err)
+		return err, ll
 	}
-	ll := &LanguageList{}
 	json.Unmarshal(body, &ll.Languages)
-	log.Printf("%#v", ll.Languages)
-	log.Println("Total Languages:", len(ll.Languages))
+	return err, ll
 }
