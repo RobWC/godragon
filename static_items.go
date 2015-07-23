@@ -1,5 +1,13 @@
 package main
 
+import (
+	"encoding/json"
+	"fmt"
+	"io/ioutil"
+	"log"
+	"net/http"
+)
+
 // http://ddragon.leagueoflegends.com/cdn/5.2.1/data/en_US/item.json
 
 /**
@@ -212,4 +220,30 @@ type ItemEffect struct {
 	Effect6Amount string `json:"Effect6Amount"`
 	Effect7Amount string `json:"Effect7Amount"`
 	Effect8Amount string `json:"Effect8Amount"`
+}
+
+type ItemData struct {
+	Type    string          `json:"type"`
+	Format  string          `json:"format"`
+	Version string          `json:"version"`
+	Basic   string          `json:"-"`
+	Items   map[string]Item `json:"data"`
+}
+
+func StaticItems(version string) (err error, ir map[string]Item) {
+	path := fmt.Sprintf("http://ddragon.leagueoflegends.com/cdn/%s/data/en_US/item.json", version)
+	resp, err := http.Get(path)
+	if err != nil {
+		return err, ir
+	}
+	defer resp.Body.Close()
+	body, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return err, ir
+	}
+	id := ItemData{}
+	json.Unmarshal(body, &id)
+	log.Printf("%#v", id)
+	log.Println("Total Items:", len(id.Items))
+	return err, id.Items
 }
