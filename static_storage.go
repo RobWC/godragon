@@ -6,6 +6,8 @@ import (
 	r "github.com/dancannon/gorethink"
 )
 
+var tables = []string{"champions", "items"}
+
 type StaticStorage struct {
 	Session *r.Session
 }
@@ -22,23 +24,35 @@ func (s *StaticStorage) Connect() (err error) {
 }
 
 func (s *StaticStorage) CreateSchema() error {
-	_, err := r.DB("lol").TableCreate("champions").RunWrite(s.Session)
-	if err != nil {
-		return err
+	for i := range tables {
+		_, err := r.DB("lol").TableCreate(tables[i]).RunWrite(s.Session)
+		if err != nil {
+			return err
+		}
 	}
 	return nil
 }
 
 func (s *StaticStorage) DropSchema() error {
-	_, err := r.DB("lol").TableDrop("champions").RunWrite(s.Session)
-	if err != nil {
-		return err
+	for i := range tables {
+		_, err := r.DB("lol").TableDrop(tables[i]).RunWrite(s.Session)
+		if err != nil {
+			return err
+		}
 	}
 	return nil
 }
 
 func (s *StaticStorage) AddChampion(champ Champion) (err error) {
 	_, err = r.Table("champions").Insert(champ).RunWrite(s.Session)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (s *StaticStorage) AddItem(item Item) (err error) {
+	_, err = r.Table("items").Insert(item).RunWrite(s.Session)
 	if err != nil {
 		return err
 	}

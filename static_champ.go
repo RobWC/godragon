@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
-	"log"
 	"net/http"
 )
 
@@ -74,16 +73,6 @@ type ChampionInfo struct {
 	Difficulty int `json:"difficulty" gorethink:"difficulty"`
 }
 
-type Image struct {
-	Full   string `json:"full"`
-	Sprite string `json:"sprite"`
-	Group  string `json:"group"`
-	X      int    `json:"x"`
-	Y      int    `json:"y"`
-	W      int    `json:"w"`
-	H      int    `json:"h"`
-}
-
 type ChampionStats struct {
 	HP                   float32 `json:"hp"`
 	HPPerLevel           float32 `json:"hpperlevel"`
@@ -120,8 +109,6 @@ func StaticChampions(version string) (err error, cr map[string]Champion) {
 	}
 	cd := ChampionData{}
 	json.Unmarshal(body, &cd)
-	log.Printf("%#v", cd)
-	log.Println("Total Champs:", len(cd.Champions))
 	return err, cd.Champions
 }
 

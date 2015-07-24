@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
-	"log"
 	"net/http"
 )
 
@@ -127,6 +126,7 @@ type Item struct {
 	Stats       ItemStats  `json:"stats"`
 	Effect      ItemEffect `json:"effect"`
 	Maps        MapList    `json:"maps"`
+	ID          string
 }
 
 type MapList struct {
@@ -230,20 +230,23 @@ type ItemData struct {
 	Items   map[string]Item `json:"data"`
 }
 
-func StaticItems(version string) (err error, ir map[string]Item) {
+func StaticItems(version string) (ir map[string]Item, err error) {
 	path := fmt.Sprintf("http://ddragon.leagueoflegends.com/cdn/%s/data/en_US/item.json", version)
 	resp, err := http.Get(path)
 	if err != nil {
-		return err, ir
+		return ir, err
 	}
 	defer resp.Body.Close()
 	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
-		return err, ir
+		return ir, err
 	}
 	id := ItemData{}
 	json.Unmarshal(body, &id)
-	log.Printf("%#v", id)
-	log.Println("Total Items:", len(id.Items))
-	return err, id.Items
+	for item := range id.Items {
+		updateItem := id.Items[item]
+		updateItem.ID = item
+		id.Items[item] = updateItem
+	}
+	return id.Items, err
 }

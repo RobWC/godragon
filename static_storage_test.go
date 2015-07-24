@@ -3,7 +3,6 @@ package main
 import (
 	"log"
 	"testing"
-	"time"
 )
 
 func TestStaticStorageConn(t *testing.T) {
@@ -22,7 +21,7 @@ func TestStaticStorageDropSchema(t *testing.T) {
 	}
 	err = s.DropSchema()
 	if err != nil {
-		t.Fatal(err)
+		log.Println(err)
 	}
 }
 
@@ -83,23 +82,27 @@ func TestStaticStorageInsertAll(t *testing.T) {
 		t.Fatal(err)
 	}
 	for k := range c {
-		log.Println("Fetching", k)
 		err, champ := StaticChampion("5.14.1", k)
 		if err != nil {
 			t.Fatal(err)
 		}
-		time.Sleep(100 * time.Millisecond)
-		log.Println("Inserting", k)
 		err = s.AddChampion(champ)
 		if err != nil {
 			t.Fatal(err)
 		}
 	}
+	items, err := StaticItems("5.14.1")
 	if err != nil {
 		t.Fatal(err)
 	}
-	err = s.DropSchema()
-	if err != nil {
-		t.Fatal(err)
+	for k := range items {
+		err = s.AddItem(items[k])
+		if err != nil {
+			t.Fatal(err)
+		}
 	}
+	//err = s.DropSchema()
+	//if err != nil {
+	//	t.Fatal(err)
+	//}
 }

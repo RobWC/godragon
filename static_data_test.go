@@ -1,12 +1,12 @@
 package main
 
-import (
-	"log"
-	"testing"
-)
+import "testing"
 
 func TestStaticChampions(t *testing.T) {
-	StaticChampions("5.12.1")
+	err, _ := StaticChampions("5.12.1")
+	if err != nil {
+		t.Fatal(err)
+	}
 }
 
 func TestStaticChampion(t *testing.T) {
@@ -35,11 +35,8 @@ func TestChampionList(t *testing.T) {
 }
 
 func TestItemList(t *testing.T) {
-	err, items := StaticItems("5.14.1")
+	_, err := StaticItems("5.14.1")
 	if err != nil {
 		t.Fatal(err)
-	}
-	for item := range items {
-		log.Println(item)
 	}
 }
