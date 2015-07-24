@@ -3,14 +3,17 @@ package main
 import "testing"
 
 func TestStaticChampions(t *testing.T) {
-	err, _ := StaticChampions("5.12.1")
+	_, err := StaticChampions("5.12.1")
 	if err != nil {
 		t.Fatal(err)
 	}
 }
 
 func TestStaticChampion(t *testing.T) {
-	StaticChampion("5.12.1", "Annie")
+	_, err := StaticChampion("5.12.1", "Annie")
+	if err != nil {
+		t.Fatal(err)
+	}
 }
 
 func TestStaticVersions(t *testing.T) {
@@ -22,12 +25,12 @@ func TestStaticLanguages(t *testing.T) {
 }
 
 func TestChampionList(t *testing.T) {
-	err, champs := StaticChampions("5.12.1")
+	champs, err := StaticChampions("5.12.1")
 	if err != nil {
 		t.Fatal(err)
 	}
 	for k := range champs {
-		err, _ := StaticChampion("5.12.1", k)
+		_, err := StaticChampion("5.12.1", k)
 		if err != nil {
 			t.Fatal(err)
 		}

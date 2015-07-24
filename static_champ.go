@@ -96,34 +96,34 @@ type ChampionStats struct {
 	AttackSpeedPerLevel  float32 `json:"attackspeedperlevel"`
 }
 
-func StaticChampions(version string) (err error, cr map[string]Champion) {
+func StaticChampions(version string) (cr map[string]Champion, err error) {
 	path := fmt.Sprintf("http://ddragon.leagueoflegends.com/cdn/%s/data/en_US/champion.json", version)
 	resp, err := http.Get(path)
 	if err != nil {
-		return err, cr
+		return cr, err
 	}
 	defer resp.Body.Close()
 	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
-		return err, cr
+		return cr, err
 	}
 	cd := ChampionData{}
 	json.Unmarshal(body, &cd)
-	return err, cd.Champions
+	return cd.Champions, err
 }
 
-func StaticChampion(version string, name string) (err error, c Champion) {
+func StaticChampion(version string, name string) (c Champion, err error) {
 	path := fmt.Sprintf("http://ddragon.leagueoflegends.com/cdn/%s/data/en_US/champion/%s.json", version, name)
 	resp, err := http.Get(path)
 	if err != nil {
-		return err, c
+		return c, err
 	}
 	defer resp.Body.Close()
 	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
-		return err, c
+		return c, err
 	}
 	cd := ChampionData{}
 	json.Unmarshal(body, &cd)
-	return err, cd.Champions[name]
+	return cd.Champions[name], err
 }

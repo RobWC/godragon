@@ -52,7 +52,7 @@ func TestStaticStorageInsert(t *testing.T) {
 		t.Fatal(err)
 	}
 	var c Champion
-	err, c = StaticChampion("5.12.1", "Annie")
+	c, err = StaticChampion("5.12.1", "Annie")
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -77,12 +77,12 @@ func TestStaticStorageInsertAll(t *testing.T) {
 		t.Fatal(err)
 	}
 	c := make(map[string]Champion)
-	err, c = StaticChampions("5.14.1")
+	c, err = StaticChampions("5.14.1")
 	if err != nil {
 		t.Fatal(err)
 	}
 	for k := range c {
-		err, champ := StaticChampion("5.14.1", k)
+		champ, err := StaticChampion("5.14.1", k)
 		if err != nil {
 			t.Fatal(err)
 		}
