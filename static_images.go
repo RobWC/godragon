@@ -2,8 +2,8 @@ package main
 
 import (
 	"fmt"
-	"image"
-	"image/png"
+
+	"io/ioutil"
 	"net/http"
 )
 
@@ -17,13 +17,13 @@ type Image struct {
 	H      int    `json:"h"`
 }
 
-func (i *Image) FetchSprite(version string) (sprite image.Image, err error) {
+func (i *Image) FetchSprite(version string) (sprite []byte, err error) {
 	resp, err := http.Get(fmt.Sprintf("http://ddragon.leagueoflegends.com/cdn/%s/img/sprite/%s", version, i.Sprite))
 	if err != nil {
 		return sprite, err
 	}
 	if resp.Header.Get("Content-Type") == "image/png" {
-		sprite, err = png.Decode(resp.Body)
+		sprite, err = ioutil.ReadAll(resp.Body)
 		if err != nil {
 			return sprite, err
 		}
@@ -31,13 +31,13 @@ func (i *Image) FetchSprite(version string) (sprite image.Image, err error) {
 	return sprite, err
 }
 
-func (i *Image) FetchFull(version string) (full image.Image, err error) {
-	resp, err := http.Get(fmt.Sprintf("http://ddragon.leagueoflegends.com/cdn/%s/img/%s/%s", version, i.Group, i.Sprite))
+func (i *Image) FetchFull(version string) (full []byte, err error) {
+	resp, err := http.Get(fmt.Sprintf("http://ddragon.leagueoflegends.com/cdn/%s/img/%s/%s", version, i.Group, i.Full))
 	if err != nil {
 		return full, err
 	}
 	if resp.Header.Get("Content-Type") == "image/png" {
-		full, err = png.Decode(resp.Body)
+		full, err = ioutil.ReadAll(resp.Body)
 		if err != nil {
 			return full, err
 		}
