@@ -2,6 +2,8 @@ package main
 
 import (
 	"fmt"
+	"strconv"
+	"strings"
 
 	"io/ioutil"
 	"net/http"
@@ -43,4 +45,19 @@ func (i *Image) FetchFull(version string) (full []byte, err error) {
 		}
 	}
 	return full, err
+}
+
+// FetchChampLoadingImage fetch the loading image for a Champion with specified skin
+func FetchChampLoadingImage(n string, s int) (data []byte, err error) {
+	resp, err := http.Get(fmt.Sprintf("http://ddragon.leagueoflegends.com/cdn/img/champion/loading/%s_%s.jpg", strings.Join([]string{strings.ToUpper(string(n[0])), strings.ToLower(string(n[1:len(n)]))}, ""), strconv.Itoa(s)))
+	if err != nil {
+		return data, err
+	}
+	if resp.StatusCode == 200 {
+		data, err = ioutil.ReadAll(resp.Body)
+		if err != nil {
+			return data, err
+		}
+	}
+	return data, err
 }

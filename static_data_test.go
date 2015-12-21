@@ -2,15 +2,17 @@ package main
 
 import "testing"
 
+var testVerion = "5.24.1"
+
 func TestStaticChampions(t *testing.T) {
-	_, err := StaticChampions("5.12.1")
+	_, err := StaticChampions(testVerion)
 	if err != nil {
 		t.Fatal(err)
 	}
 }
 
 func TestStaticChampion(t *testing.T) {
-	_, err := StaticChampion("5.12.1", "Annie")
+	_, err := StaticChampion(testVerion, "Annie")
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -25,12 +27,12 @@ func TestStaticLanguages(t *testing.T) {
 }
 
 func TestChampionList(t *testing.T) {
-	champs, err := StaticChampions("5.12.1")
+	champs, err := StaticChampions(testVerion)
 	if err != nil {
 		t.Fatal(err)
 	}
 	for k := range champs {
-		_, err := StaticChampion("5.12.1", k)
+		_, err := StaticChampion(testVerion, k)
 		if err != nil {
 			t.Fatal(err)
 		}
@@ -38,7 +40,7 @@ func TestChampionList(t *testing.T) {
 }
 
 func TestItemList(t *testing.T) {
-	_, err := StaticItems("5.14.1")
+	_, err := StaticItems(testVerion)
 	if err != nil {
 		t.Fatal(err)
 	}
