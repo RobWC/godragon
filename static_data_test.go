@@ -12,7 +12,7 @@ func TestStaticChampions(t *testing.T) {
 }
 
 func TestStaticChampion(t *testing.T) {
-	_, err := StaticChampion(testVerion, "Annie")
+	_, err := StaticChampion("Annie", testVerion)
 	if err != nil {
 		t.Fatal(err)
 	}

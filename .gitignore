@@ -23,5 +23,9 @@ _testmain.go
 *.test
 *.prof
 
+# Mac crap
+.DS_Store
+
 #remove test files
-test/.*
+test/*.png
+test/*.jpg
