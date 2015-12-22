@@ -3,6 +3,7 @@ package main
 import (
 	"bufio"
 	"fmt"
+	"image/jpeg"
 	"image/png"
 	"os"
 	"testing"
@@ -24,21 +25,31 @@ func TestImageFetchChampion(t *testing.T) {
 	defer fullFile.Close()
 	fullwr := bufio.NewWriter(fullFile)
 	png.Encode(fullwr, full)
+}
 
+func TestFetchSprite(t *testing.T) {
+	c, err := StaticChampion("Braum", testVerion)
+	if err != nil {
+		t.Fatal(err)
+	}
 	sprite, err := c.Image.FetchSprite(testVerion)
 	if err != nil {
 		t.Fatal(err)
 	}
-	spriteFile, err := os.Create(fmt.Sprintf("test/TestImageFetchSprite.png"))
+	spriteFile, err := os.Create(fmt.Sprintf("test/TestImageFetchSprite.jpg"))
 	if err != nil {
 		t.Fatal(err)
 	}
 	defer spriteFile.Close()
 	spritewr := bufio.NewWriter(spriteFile)
-	err = png.Encode(spritewr, sprite)
+	err = jpeg.Encode(spritewr, sprite, &jpeg.Options{Quality: jpeg.DefaultQuality})
 	if err != nil {
 		t.Fatal(err)
 	}
+
+}
+
+func TestFetchChampLoadingImage(t *testing.T) {
 
 	img, err := FetchChampLoadingImage("Braum", 0)
 	if err != nil {
@@ -51,16 +62,18 @@ func TestImageFetchChampion(t *testing.T) {
 	defer endFile.Close()
 	imgwr := bufio.NewWriter(endFile)
 	png.Encode(imgwr, img)
+}
 
-	img, err = FetchChampSplashImage("Braum", 0)
+func TestFetchChampSplashImage(t *testing.T) {
+	img, err := FetchChampSplashImage("Braum", 0)
 	if err != nil {
 		t.Fatal(err)
 	}
-	endFile, err = os.Create(fmt.Sprintf("test/TestImageFetchChampSplashImage.png"))
+	endFile, err := os.Create(fmt.Sprintf("test/TestImageFetchChampSplashImage.png"))
 	if err != nil {
 		t.Fatal(err)
 	}
 	defer endFile.Close()
-	imgwr = bufio.NewWriter(endFile)
+	imgwr := bufio.NewWriter(endFile)
 	png.Encode(imgwr, img)
 }
