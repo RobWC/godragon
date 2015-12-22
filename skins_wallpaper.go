@@ -30,17 +30,12 @@ func CreateSkinsWallpaper(champName, version string, width, height int) (image.I
 		skinMidH := skinH / 2
 		skinTotalW := skinW * skinCount
 
-		skinStart := 0
-		if (maxWidth - skinTotalW) < 0 {
-			// too many skins to fit so we need to fold to multiple lines
-			return nil, fmt.Errorf("Too many skins to display correctly")
-		} else {
-			skinStart = (skinTotalW - maxWidth) / 2
-		}
+		skinStart := (skinTotalW - maxWidth) / 2
 
 		wallpaperMidH := maxHeight / 2
 
 		m := image.NewRGBA(image.Rect(0, 0, maxWidth, maxHeight))
+		draw.Draw(m, m.Bounds(), image.Black, image.ZP, draw.Src)
 		widthStart, heightStart := 0, 0
 
 		widthStart = skinStart
