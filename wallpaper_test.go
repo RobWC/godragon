@@ -1,4 +1,4 @@
-package main
+package godragon
 
 import (
 	"bufio"
@@ -38,8 +38,8 @@ func TestCreateWallpaper(t *testing.T) {
 }
 
 func TestCreateAllWallpaper(t *testing.T) {
-	width := 1920
-	height := 1080
+	width := 2880
+	height := 1800
 
 	champs, err := StaticChampions(testVerion)
 	if err != nil {

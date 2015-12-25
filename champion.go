@@ -1,4 +1,4 @@
-package main
+package godragon
 
 type ChampionData struct {
 	Type      string              `json:"type"`
