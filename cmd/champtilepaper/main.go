@@ -1,12 +1,10 @@
 package main
 
 import (
-	"bufio"
 	"flag"
 	"fmt"
 	"image"
 	"image/draw"
-	"image/jpeg"
 	"os"
 	"strings"
 	"sync"
@@ -41,18 +39,6 @@ func init() {
 	*champname = cn
 }
 
-func outputWallpaper(img image.Image, champName, pathLoc string) {
-	endFile, err := os.Create(fmt.Sprintf("%s/Wallpaper-%s-%dx%d.jpg", pathLoc, champName, *width, *height))
-	if err != nil {
-		fmt.Printf("Error creating wallpaper : %s\n", err)
-		os.Exit(1)
-	}
-	defer endFile.Close()
-	imgwr := bufio.NewWriter(endFile)
-	jpeg.Encode(imgwr, img, &jpeg.Options{Quality: 100})
-	wg.Done()
-}
-
 func main() {
 
 	// split champnames
@@ -75,7 +61,10 @@ func main() {
 				os.Exit(1)
 			}
 			wg.Add(1)
-			go outputWallpaper(img, k, *output)
+			go func(name string) {
+				godragon.WriteWallpaperFile(img, name, *output)
+				wg.Done()
+			}(k)
 		}
 	} else if len(champList) > 1 {
 
@@ -146,7 +135,10 @@ func main() {
 		}
 
 		wg.Add(1)
-		go outputWallpaper(m, strings.Join(champFinalList, ","), *output)
+		go func() {
+			godragon.WriteWallpaperFile(m, strings.Join(champFinalList, ","), *output)
+			wg.Done()
+		}()
 	} else if len(champList) == 1 && champList[0] != "" {
 		fmt.Printf("Creating wallpaper for %s at %dx%d\n", *champname, *width, *height)
 		img, err := godragon.CreateWallpaper(*champname, currentVersion, *width, *height)
@@ -156,7 +148,10 @@ func main() {
 			os.Exit(1)
 		}
 		wg.Add(1)
-		go outputWallpaper(img, *champname, *output)
+		go func() {
+			godragon.WriteWallpaperFile(img, *champname, *output)
+			wg.Done()
+		}()
 	}
 	wg.Wait()
 	os.Exit(0)

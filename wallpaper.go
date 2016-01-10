@@ -5,9 +5,26 @@ import (
 	"fmt"
 	"image"
 	"image/draw"
+	"image/jpeg"
 	"image/png"
 	"os"
 )
+
+// WriteWallpaperFile write file to JPEG at specified location
+func WriteWallpaperFile(img image.Image, champName, pathLoc string) {
+	if pathLoc == "" {
+		pathLoc = "."
+	}
+
+	endFile, err := os.Create(fmt.Sprintf("%s/Wallpaper-%s-%dx%d.jpg", pathLoc, champName, img.Bounds().Max.X, img.Bounds().Max.Y))
+	if err != nil {
+		fmt.Printf("Error creating wallpaper : %s\n", err)
+		os.Exit(1)
+	}
+	defer endFile.Close()
+	imgwr := bufio.NewWriter(endFile)
+	jpeg.Encode(imgwr, img, &jpeg.Options{Quality: 100})
+}
 
 // CreateWallpaper create a tiled wallpaper of a specific champion
 func CreateWallpaper(champName, version string, width, height int) (image.Image, error) {
