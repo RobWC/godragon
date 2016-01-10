@@ -24,6 +24,21 @@ RU	RU	ru.api.pvp.net
 PBE	PBE1	pbe.api.pvp.net
 */
 
+// APIEndpoints mapping to api endpoints
+var APIEndpoints = map[string]string{
+	"br":   "br.api.pvp.net",
+	"eune": "eune.api.pvp.net",
+	"euw":  "euw.api.pvp.net",
+	"kr":   "kr.api.pvp.net",
+	"lan":  "lan.api.pvp.net",
+	"las":  "las.api.pvp.net",
+	"na":   "na.api.pvp.net",
+	"oce":  "oce.api.pvp.net",
+	"tr":   "tr.api.pvp.net",
+	"ru":   "ru.api.pvp.net",
+	"pbe":  "pbe.api.pvp.net",
+}
+
 // APIClient Riot API client
 type APIClient struct {
 	endpoint string
@@ -39,7 +54,7 @@ func NewAPIClient(region, key string) *APIClient {
 	a := &APIClient{
 		key:    key,
 		game:   "lol",
-		region: region,
+		region: strings.ToLower(region),
 		client: &http.Client{
 			Jar:     nil,
 			Timeout: time.Second * 5,
@@ -64,6 +79,23 @@ func (a *APIClient) genURL(version, api string, query url.Values) url.URL {
 	u.Path = fmt.Sprintf("/api/%s/%s/%s/%s", a.game, a.region, version, api)
 	u.RawQuery = query.Encode()
 	return u
+}
+
+func (a *APIClient) genRequest(method, version, api string, query url.Values) (*http.Request, error) {
+	u := url.URL{}
+	u.Scheme = "https"
+	u.Host = strings.Join([]string{a.region, ".api.pvp.net"}, "")
+	u.Path = fmt.Sprintf("/api/%s/%s/%s/%s", a.game, a.region, version, api)
+	u.RawQuery = query.Encode()
+	return http.NewRequest(method, u.String(), nil)
+}
+
+func (a *APIClient) doRequest(method, version, api string, query url.Values) ([]byte, error) {
+	req, err := a.genRequest("GET", "v2.2", api, nil)
+	if err != nil {
+		return nil, err
+	}
+	return a.do(req)
 }
 
 // do execute a request
