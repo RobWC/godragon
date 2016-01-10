@@ -22,14 +22,17 @@ go get github.com/robwc/godragon/cmd/champtilepaper
 Usage
 ```
 Usage of champtilepaper:
-  -champ string
-    	Specify a single champ to create wallpapers for
-  -height int
-    	Height of wallpapers (default 1080)
-  -output string
-    	Specify the output location for the wallpaper (default ".")
-  -width int
-    	Width of wallpapers (default 1920)
+-all
+      Create wallpapers for all champs at the specified resolution
+-champ string
+      Specify a single or multiple champion names to create a wallpaper (-champ Teemo or -champ Teemo,Ziggs)
+-height int
+      Height of wallpapers (default 1080)
+-output string
+      Specify the output location for the wallpaper (default ".")
+-width int
+      Width of wallpapers (default 1920)
+
 ```
 
 Specify the champion name
@@ -37,9 +40,19 @@ Specify the champion name
 champtilepaper -champ Teemo
 ```
 
-Don't specify a champion name and generate all champions at once!
+Specify multiple champion names
 ```
-champtilepaper
+champtilepaper -champ Teemo,Ziggs,Rumble
+```
+
+Create your favorite team
+```
+champtilepaper -champ Teemo,Ahri,Rengar,Braum,Jinx
+```
+
+Specify all to create a wallpaper for every champ
+```
+champtilepaper -all
 Creating wallpaper for Gnar at 1920x1080
 Creating wallpaper for Irelia at 1920x1080
 Creating wallpaper for Vi at 1920x1080
