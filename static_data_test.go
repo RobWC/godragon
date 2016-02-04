@@ -1,6 +1,9 @@
 package godragon
 
-import "testing"
+import (
+	"log"
+	"testing"
+)
 
 var testVerion = "5.24.1"
 
@@ -40,8 +43,12 @@ func TestChampionList(t *testing.T) {
 }
 
 func TestItemList(t *testing.T) {
-	_, err := StaticItems(testVerion)
+	items, err := StaticItems(testVerion)
 	if err != nil {
 		t.Fatal(err)
+	}
+
+	for _, v := range items {
+		log.Println(v.Name)
 	}
 }
