@@ -17,6 +17,7 @@ type Champion struct {
 	AllyTips  []string        `json:"allytips"`
 	EnemyTips []string        `json:"enemytips"`
 	Spells    []ChampionSpell `json:"Spells"`
+	Passive   ChampionPassive `json:"passive"`
 	Info      ChampionInfo    `json:"info"`
 	Image     Image           `json:"image"`
 	Skins     []ChampionSkin  `json:"skins"`
@@ -77,7 +78,7 @@ type ChampionStats struct {
 	SpellBlock           float32 `json:"spellblock"`
 	SpellBlockPerLevel   float32 `json:"spellblockperlevel"`
 	AttackRange          float32 `json:"attackrange"`
-	HpRegen              float32 `json:"hpregen"`
+	HPRegen              float32 `json:"hpregen"`
 	HPRegenPerLevel      float32 `json:"hpregenperlevel"`
 	MPRegen              float32 `json:"mpregen"`
 	MPRegenPerLevel      float32 `json:"mpregenperlevel"`
@@ -87,4 +88,11 @@ type ChampionStats struct {
 	AttackDamagePerLevel float32 `json:"attackdamageperlevel"`
 	AttackSpeedOffset    float32 `json:"attackspeedoffset"`
 	AttackSpeedPerLevel  float32 `json:"attackspeedperlevel"`
+}
+
+type ChampionPassive struct {
+	Description          string `json:"description"`
+	SanitizedDescription string `json:"sanitizedDescription"`
+	Name                 string `json:"name"`
+	Image                Image  `json:"image"`
 }

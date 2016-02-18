@@ -29,3 +29,5 @@ _testmain.go
 #remove test files
 test/*.png
 test/*.jpg
+
+#.*
