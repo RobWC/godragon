@@ -70,7 +70,7 @@ func ChampionCooldowns(c Champion) error {
 Type: {{$tlen := len .Tags}}{{ range $i, $e := .Tags}}{{$e}}{{ $v := add $i 1}}{{if ne $v $tlen}}, {{end}}{{end}}
 Skins: {{ len .Skins }}
 
-HP:    {{ .Stats.HP }}(+{{ .Stats.HPPerLevel}})   HP Regen:   {{.Stats.HPRegen}}(+{{.Stats.HPRegenPerLevel}}) 
+HP:    {{ .Stats.HP }}(+{{.Stats.HPPerLevel}})   HP Regen:   {{.Stats.HPRegen}}(+{{.Stats.HPRegenPerLevel}}) 
 Mana:  {{ .Stats.MP }}(+{{.Stats.MPPerLevel}})   Mana Regen: {{ .Stats.MPRegen}}(+{{.Stats.MPRegenPerLevel}})
 Armor: {{ .Stats.Armor}}(+{{.Stats.ArmorPerLevel}})     MR:         {{.Stats.SpellBlock}}(+{{.Stats.SpellBlockPerLevel}})
 AD:    {{ .Stats.AttackDamage}}(+{{.Stats.AttackDamagePerLevel}})  AS:         {{ ascalc .Stats.AttackSpeedOffset}}(+{{.Stats.AttackSpeedPerLevel}})

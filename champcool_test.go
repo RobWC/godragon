@@ -4,7 +4,7 @@ import "testing"
 
 func TestChampionCooldowns(t *testing.T) {
 
-	nc, err := StaticChampion("Nami", "6.3.1")
+	nc, err := StaticChampion("Sivir", "6.4.1")
 	if err != nil {
 		t.Fatal(err)
 	}
