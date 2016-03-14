@@ -11,7 +11,7 @@ func (it *ItemTree) Balance() {
 }
 
 func (it *ItemTree) AddNode(in *ItemNode) {
-	it.Nodes = append(it.Nodes, in)
+	//it.Nodes = append(it.Nodes, in)
 }
 
 type ItemNode struct {
@@ -20,7 +20,7 @@ type ItemNode struct {
 }
 
 func (in *ItemNode) AddChild(cn *ItemNode) {
-	in.Child = append(in.Child, cn)
+	//in.Child = append(in.Child, cn)
 }
 
 func ItemBuildTree() error {
@@ -30,7 +30,7 @@ func ItemBuildTree() error {
 		return err
 	}
 
-	it := ItemTree{Nodes: make(map[string]*ItemNode)}
+	//it := ItemTree{Nodes: make(map[string]*ItemNode)}
 	itemMap := make(map[string][]string)
 
 	for i := range items {
