@@ -2,6 +2,7 @@ package godragon
 
 import (
 	"bytes"
+	"encoding/base64"
 	"fmt"
 	"image"
 	"image/draw"
@@ -17,13 +18,14 @@ import (
 
 // Image image construct for static images
 type Image struct {
-	Full   string `json:"full"`
-	Sprite string `json:"sprite"`
-	Group  string `json:"group"`
-	X      int    `json:"x"`
-	Y      int    `json:"y"`
-	W      int    `json:"w"`
-	H      int    `json:"h"`
+	Full    string `json:"full"`
+	Sprite  string `json:"sprite"`
+	Group   string `json:"group"`
+	X       int    `json:"x"`
+	Y       int    `json:"y"`
+	W       int    `json:"w"`
+	H       int    `json:"h"`
+	Encoded string
 }
 
 // FetchSprite return the sprite of the image
@@ -72,6 +74,24 @@ func (i *Image) Fetch(version string) (image.Image, error) {
 		return img, err
 	}
 	return nil, fmt.Errorf("Error fetching image %s response code %d", i.Full, resp.StatusCode)
+}
+
+// EncodeImage return image as encoded in base64
+func (i *Image) EncodeImage(version string) (string, error) {
+
+	img, err := i.Fetch(version)
+	if err != nil {
+		return "", err
+	}
+
+	buff := new(bytes.Buffer)
+	err = jpeg.Encode(buff, img, nil)
+	if err != nil {
+		log.Println(err)
+	}
+
+	i.Encoded = base64.StdEncoding.EncodeToString(buff.Bytes())
+	return i.Encoded, nil
 }
 
 // FetchChampLoadingImage fetch the loading image for a Champion with specified skin
