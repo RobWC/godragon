@@ -4,12 +4,38 @@ import (
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
+	"log"
 	"math"
 	"net/http"
 	"os"
 	"strconv"
 	"text/template"
 )
+
+func NewStaticChampions(apiKey string) (cr map[string]Champion, err error) {
+	path := fmt.Sprintf("https://global.api.pvp.net/api/lol/static-data/na/v1.2/champion?champData=all&api_key=%s", apiKey)
+	resp, err := http.Get(path)
+	if err != nil {
+		return cr, err
+	}
+
+	cd := ChampionData{}
+	dec := json.NewDecoder(resp.Body)
+	err = dec.Decode(&cd)
+	if err != nil {
+		switch err := err.(type) {
+		case *json.UnmarshalTypeError:
+			t, _ := dec.Token()
+			log.Println(err.Type, err.Value, err.Offset)
+			log.Printf("%T: %v\n", t, t)
+			return cr, err
+		default:
+			return cr, err
+		}
+	}
+
+	return cd.Champions, nil
+}
 
 // StaticChampions returns a map of all Champions
 func StaticChampions(version string) (cr map[string]Champion, err error) {

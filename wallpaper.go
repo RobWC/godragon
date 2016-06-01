@@ -27,11 +27,8 @@ func WriteWallpaperFile(img image.Image, champName, pathLoc string) {
 }
 
 // CreateWallpaper create a tiled wallpaper of a specific champion
-func CreateWallpaper(champName, version string, width, height int) (image.Image, error) {
-	c, err := StaticChampion(champName, version)
-	if err != nil {
-		return nil, err
-	}
+func CreateWallpaper(champ string, version string, width, height int) (image.Image, error) {
+	c := Champion{}
 	img, err := c.Image.Fetch(version)
 	if err != nil {
 		return nil, err

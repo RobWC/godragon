@@ -7,11 +7,7 @@ import (
 )
 
 // CreateSkinsWallpaper create a wallpaper from all skins of a champion
-func CreateSkinsWallpaper(champName, version string, width, height int) (image.Image, error) {
-	c, err := StaticChampion(champName, version)
-	if err != nil {
-		return nil, err
-	}
+func CreateSkinsWallpaper(c Champion, width, height int) (image.Image, error) {
 
 	skinCount := len(c.Skins)
 
@@ -30,7 +26,11 @@ func CreateSkinsWallpaper(champName, version string, width, height int) (image.I
 		skinMidH := skinH / 2
 		skinTotalW := skinW * skinCount
 
-		skinStart := (skinTotalW - maxWidth) / 2
+		if skinTotalW > maxWidth {
+			// we need to scale the images into two rows
+		}
+
+		skinStart := ((skinTotalW - (48 * skinCount)) - maxWidth) / 2
 
 		wallpaperMidH := maxHeight / 2
 
@@ -47,7 +47,7 @@ func CreateSkinsWallpaper(champName, version string, width, height int) (image.I
 			}
 
 			draw.Draw(m, m.Bounds(), img, image.Point{X: widthStart, Y: skinMidH - wallpaperMidH}, draw.Src)
-			widthStart = widthStart - img.Bounds().Max.X
+			widthStart = widthStart - img.Bounds().Max.X + 48
 			if widthStart < -(maxWidth) {
 				if (widthStart < -(maxWidth)) && (heightStart < -(maxHeight)) {
 					break
@@ -59,5 +59,5 @@ func CreateSkinsWallpaper(champName, version string, width, height int) (image.I
 		}
 		return m, nil
 	}
-	return nil, fmt.Errorf("No skins found for champion %s", champName)
+	return nil, fmt.Errorf("No skins found for champion %s", c.Name)
 }

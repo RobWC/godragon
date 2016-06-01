@@ -5,7 +5,7 @@ import (
 	"testing"
 )
 
-var testVerion = "5.24.1"
+var testVerion = "6.10.1"
 
 func TestStaticChampions(t *testing.T) {
 	_, err := StaticChampions(testVerion)

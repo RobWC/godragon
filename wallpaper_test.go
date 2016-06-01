@@ -54,26 +54,21 @@ func TestCreateAllWallpaper(t *testing.T) {
 }
 
 func TestCreateSkinsWallpaper(t *testing.T) {
-	champName := "Braum"
-	width := 2880
-	height := 1800
+	champName := "Varus"
+	width := 1920
+	height := 1080
 	t.Logf("Creating Skins Wallpaper for %s at %dx%d", champName, width, height)
-	img, err := CreateSkinsWallpaper(champName, testVerion, width, height)
+
+	cd, err := NewStaticChampions(os.Getenv("RIOT_KEY"))
 	if err != nil {
 		t.Fatal(err)
 	}
-	_, err = os.Stat(fmt.Sprintf("/Users/rcameron/gopath/src/github.com/robwc/godragon/test/%s", champName))
-	if os.IsNotExist(err) {
-		// create directory
-		err := os.Mkdir(fmt.Sprintf("/Users/rcameron/gopath/src/github.com/robwc/godragon/test/%s", champName), os.ModePerm)
-		if err != nil {
-			t.Fatal(err)
-		}
-	} else if err != nil {
+
+	img, err := CreateSkinsWallpaper(cd[champName], width, height)
+	if err != nil {
 		t.Fatal(err)
 	}
-
-	endFile, err := os.Create(fmt.Sprintf("/Users/rcameron/gopath/src/github.com/robwc/godragon/test/%[1]s/SkinsWallpaper-%[1]s-%dx%d.png", champName, width, height))
+	endFile, err := os.Create(fmt.Sprintf("SkinsWallpaper-%[1]s-%dx%d.png", champName, width, height))
 	if err != nil {
 		t.Fatal(err)
 	}

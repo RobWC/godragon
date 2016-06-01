@@ -5,30 +5,33 @@ type ChampionData struct {
 	Format    string              `json:"format"`
 	Version   string              `json:"version"`
 	Champions map[string]Champion `json:"data"`
+	Keys      map[string]string   `json:"keys"`
 }
 
 type Champion struct {
-	Version   string          `json:"version"`
-	ID        string          `json:"id"`
-	Key       string          `json:"key"`
-	Name      string          `json:"name"`
-	Title     string          `json:"title"`
-	Blurb     string          `json:"blurb"`
-	AllyTips  []string        `json:"allytips"`
-	EnemyTips []string        `json:"enemytips"`
-	Spells    []ChampionSpell `json:"Spells"`
-	Passive   ChampionPassive `json:"passive"`
-	Info      ChampionInfo    `json:"info"`
-	Image     Image           `json:"image"`
-	Skins     []ChampionSkin  `json:"skins"`
-	Lore      string          `json:"lore"`
-	Tags      []string        `json:"tags"`
-	ParType   string          `json:"partype"`
-	Stats     ChampionStats   `json:"stats"`
+	ID          int                   `json:"id"`
+	Key         string                `json:"key"`
+	Name        string                `json:"name"`
+	Title       string                `json:"title"`
+	Blurb       string                `json:"blurb"`
+	AllyTips    []string              `json:"allytips"`
+	EnemyTips   []string              `json:"enemytips"`
+	Spells      []ChampionSpell       `json:"spells"`
+	Passive     ChampionPassive       `json:"passive"`
+	Info        ChampionInfo          `json:"info"`
+	Image       Image                 `json:"image"`
+	Skins       []ChampionSkin        `json:"skins"`
+	Lore        string                `json:"lore"`
+	Tags        []string              `json:"tags"`
+	ParType     string                `json:"partype"`
+	Stats       ChampionStats         `json:"stats"`
+	Recommended []ChampionRecommended `json:"recommended"`
 }
 
+type ChampionRecommended struct{}
+
 type ChampionSkin struct {
-	ID   string `json:"id"`
+	ID   int    `json:"id"`
 	Num  int    `json:"num"`
 	Name string `json:"name"`
 }
@@ -40,24 +43,25 @@ type ChampionSpell struct {
 	ToolTip      string              `json:"tooltip"`
 	LevelTip     map[string][]string `json:"leveltip"`
 	MaxRank      int                 `json:"maxrank"`
-	Cooldown     []int               `json:"cooldown"`
+	Cooldown     []float32           `json:"cooldown"`
 	CooldownBurn string              `json:"cooldownBurn"`
 	Cost         []int               `json:"cost"`
 	CostBurn     string              `json:"costBurn"`
-	Effect       []string            `json:"effect"` //TODO: What is this really?
+	Effect       [][]float32         `json:"effect"` //TODO: What is this really?
 	EffectBurn   []string            `json:"effectburn"`
 	Vars         []SpellVar          `json:"vars"`
 	CostType     string              `json:"costType"`
-	Range        []int               `json:"range"`
+	Range        []float32           `json:"range"`
 	RangeBurn    string              `json:"rangeBurn"`
 	Image        Image               `json:"image"`
+	AltImages    Image               `json:"altimages"`
 	Resource     string              `json:"resource"`
 }
 
 type SpellVar struct {
-	Link  string  `json:"link"`
-	Coeff float32 `json:"coeff"`
-	Key   string  `json:"key"`
+	Link  string    `json:"link"`
+	Coeff []float32 `json:"coeff"`
+	Key   string    `json:"key"`
 }
 
 type ChampionInfo struct {
